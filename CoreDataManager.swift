@@ -35,12 +35,15 @@ class CoreDataManager {
         }
     }
     
-    func read(entityName:String, withFormat:String?, andValues:CVarArg?)->[Dictionary<String,Any>]{
+    func read(entityName:String, query:Dictionary<String, Any>)->[Dictionary<String,Any>]{
         var records:[Dictionary<String, Any>] = []
         let fetchRequest:NSFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         
-        if(withFormat != nil && andValues != nil){
-            fetchRequest.predicate = NSPredicate(format: withFormat!, andValues!)
+        if(query["format"] != nil && query["values"] != nil){
+            let format =  query["format"] as! String
+            let values = query["value"] as! [Any]
+            
+            fetchRequest.predicate = NSPredicate(format: format, argumentArray: values)
         }
         
         do{
